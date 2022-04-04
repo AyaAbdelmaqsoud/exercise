@@ -1,0 +1,103 @@
+swagger: "2.0"
+info:
+  description: "Jumia Exercise"
+  version: "1.0"
+  title: "phone-api"
+  contact:
+    email: "aya.abdelmaqsoud@gmail.com"
+host: "phone-api"
+basePath: "/services"
+tags:
+  - name: Phone numbers
+    description: Phone-related API
+schemes:
+  - "http"
+paths:
+  /phoneNumbers/:
+    get:
+      tags:
+        - "phone"
+      summary: "Find list of all Phone numbers should be categorized by country "
+      description: "Returns list of Phone numbers"
+      operationId: "getPhoneNumbers"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "header"
+          name: "X-CMP-Tenant-Id"  #temporarily, until the the authorization token can be used to find the tenant
+          description: "ID of the Tenant"
+          required: true
+          type: "string"
+        - in: "header"
+          name: "X-Correlation-Id"
+          description: "Correlation ID for the current external request"
+          required: true
+          type: string
+        - in: "query"
+          name: "country"
+          description: "country"
+          type: string
+        - in: "query"
+          name: "state"
+          description: "state"
+          type: "string"
+      responses:
+        200:
+          description: "Phone list successfully retrieved"
+          schema:
+           type: array
+           items:
+             $ref: '#/definitions/Phone'  
+        400:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        404:
+          description: "not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"    
+definitions:
+  Phone:
+    type: "object"
+    properties:
+      contact:
+        type: "string"
+      country:
+        type: "string"
+      state:
+        type: "string"
+        example: "valid or not valid"
+      countryCode:
+        type: "string"
+        example: "countryCode"
+      phoneNumber:
+        type: "string"
+      
+
+  GenericResponse:
+    type: "object"
+    properties:
+      status:
+        properties:
+          statusCategory:
+            type: "string"
+            enum:
+            - "ok"
+            - "error"
+            - "warning"
+          statusCode:
+            type: "string"
+          statusMessage:
+            type: "string"
+          additionalInfo:
+            type: "string"
+  ErrorResponse:
+    allOf:
+      - $ref: '#/definitions/GenericResponse'
+      - type: "object"
+    xml:
+      name: "Response"

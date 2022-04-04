@@ -1,0 +1,16 @@
+# in-memory test database H2 is automatically created by hibernate
+# we don't use liquibase scripts because otherwise we had to change existing changelogs
+
+spring:
+        datasource:
+                driver-class-name: org.h2.Driver
+                password:
+                url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS TEST
+                username: sa
+        jpa:
+                hibernate:
+                        ddl-auto: create-drop        
+        liquibase:
+                enabled: false
+        autoconfigure:
+                exclude: org.apache.camel.spring.boot.CamelAutoConfiguration
